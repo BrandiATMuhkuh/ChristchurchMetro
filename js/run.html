@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<script src="XML.ObjTree-0.24/lib/XML/ObjTree.js"></script>
+
+	<style>
+      html, body, #map-canvas {
+        height: 100%;
+        margin: 0px;
+        padding: 0px
+      }
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+	</head>
+	<body>
+		<script type="text/javascript">
+		var flightPlanCoordinates = [];
+		var flightPath;
+var xotree = new XML.ObjTree();
+var finalResult;
+
+			function loadXMLDoc(url)
+{
+var xmlhttp;
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+xmlhttp.onreadystatechange=function()
+  {
+  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+    {
+    	//console.log(xmlhttp.status);
+    	//console.log(xmlhttp.statusText);
+   		//console.log(xmlhttp.responseText);
+   		var tree = xotree.parseXML( xmlhttp.responseText );
+			console.log( tree );
+			finalResult=tree;
+			var myline = finalResult.JPRoutePattern.Project[0].Route[0].Destination[0].Pattern.Mif;
+			var linearray = myline.split(/\r\n|\r|\n/);
+
+			var path = flightPath.getPath();
+			for(var i=0; i<linearray.length; i++){
+				var lat = linearray[i].split(" ")[0];
+				var lng = linearray[i].split(" ")[1];	
+				if(new RegExp("^([+-]?\\d*\\.?\\d*)$").test(lat)
+					&&
+					new RegExp("^([+-]?\\d*\\.?\\d*)$").test(lng)){
+
+					console.log(true, linearray.length);
+
+
+					//This if for sure a lat lng
+					if(lng!=0){
+						path.push(new google.maps.LatLng(lng, lat));
+					}
+					
+				}
+			}
+    }
+  }
+xmlhttp.open("GET",url,true);
+xmlhttp.send();
+}
+
+
+
+	
+		</script>
+
+		<script>
+function initialize() {
+  var mapOptions = {
+    zoom: 13,
+     center: new google.maps.LatLng(-43.488381, 172.54428899999994),
+    mapTypeId: google.maps.MapTypeId.TERRAIN
+  };
+
+  var map = new google.maps.Map(document.getElementById('map-canvas'),
+      mapOptions);
+
+
+  flightPath = new google.maps.Polyline({
+    path: flightPlanCoordinates,
+    geodesic: true,
+    strokeColor: '#FF0000',
+    strokeOpacity: 1.0,
+    strokeWeight: 2
+  });
+
+  flightPath.setMap(map);
+
+  loadXMLDoc("http://localhost:8000/data_files/JPRoutePattern.xml");
+}
+
+google.maps.event.addDomListener(window, 'load', initialize);
+
+
+    </script>
+
+		<div id="map-canvas"></div>
+	</body>
+</html>

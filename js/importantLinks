@@ -1,0 +1,11 @@
+http://rtt.metroinfo.org.nz/RTT/Public/Utility/File.aspx?Name=JPRoutePositionET.xml&ContentType=SQLXML&PlatformTag=
+
+"http://rtt.metroinfo.org.nz/RTT/Public/Utility/File.aspx?ContentType=SQLXML&Name=JPPlatform.xml";
+"http://rtt.metroinfo.org.nz/RTT/Public/Utility/File.aspx?ContentType=SQLXML&Name=JPRoutePattern.xml";
+
+
+JPPlatform.xml
+JPPlatformGroup.xml
+JPRoutePattern.xml
+RoutePositionET.xml
+ScheduleMaster.xml
